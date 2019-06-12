@@ -10,3 +10,9 @@ Description: What the package does (one paragraph).
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.1.1
+Imports: 
+    magrittr
+URL: https://github.com/USAID-OHA-SI/ingestMMD
+BugReports: https://github.com/USAID-OHA-SI/ingestMMD/issues
