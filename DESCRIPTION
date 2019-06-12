@@ -14,6 +14,8 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
 Imports: 
-    magrittr
+    magrittr,
+    readxl,
+    dplyr
 URL: https://github.com/USAID-OHA-SI/ingestMMD
 BugReports: https://github.com/USAID-OHA-SI/ingestMMD/issues
