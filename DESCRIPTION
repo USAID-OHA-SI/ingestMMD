@@ -1,12 +1,13 @@
 Package: ingestMMD
-Title: What the Package Does (One Line, Title Case)
+Title: Ingest Multi-Month Dispensing (MMD) Collection Tool Data
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Aaron",
+           family = "Chafetz",
            role = c("aut", "cre"),
-           email = "first.last@example.com")
-Description: What the package does (one paragraph).
+           email = "achafetz@usaid.gov")
+Description: Read, munge, create MMD dataset from MMD collection tool. Useful for 
+   planning and tracking progress.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
