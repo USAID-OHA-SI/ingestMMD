@@ -6,9 +6,10 @@
 #'
 #' @examples
 #' \dontrun{
-#' #structure output for Burundi
+#' #pull ou name from tool
 #'   path <- "~/MMDData/MMD National Data Collection Tool PEPFARlandia.xlsx"
 #'   ingest_ou(path) }
+
 ingest_ou <- function(path){
 
     readxl::read_xlsx(path,
