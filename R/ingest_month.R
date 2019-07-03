@@ -15,12 +15,12 @@ ingest_month <- function(path){
   m <- readxl::read_xlsx(path, sheet = "6. Monthly Reporting",
                     range = "B3", col_names = "month")
   if(length(m) == 0) {
-    print("June 2019")
+    as.Date("2019-06-01")
   } else {
     m %>%
       dplyr::pull() %>%
-      as.Date() %>%
-      format("%B %Y")
+      as.Date() #%>%
+      #format("%B %Y")
   }
 
 

@@ -16,6 +16,9 @@ RoxygenNote: 6.1.1
 Imports: 
     magrittr,
     readxl,
-    dplyr
+    dplyr,
+    tidyr,
+    lubridate,
+    stringr
 URL: https://github.com/USAID-OHA-SI/ingestMMD
 BugReports: https://github.com/USAID-OHA-SI/ingestMMD/issues
