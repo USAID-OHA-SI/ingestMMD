@@ -7,6 +7,7 @@ files <- list.files("C:/Users/achafetz/Downloads/June 2019",
 
 df <- purrr::map_dfr(files, ingest_data)
 
+readr::write_csv(df, "C:/Users/achafetz/Downloads/MMD_National_Data_June_20190711.csv", na = "")
 
 
 # REVIEW ------------------------------------------------------------------
