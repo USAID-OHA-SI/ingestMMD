@@ -2,3 +2,4 @@
 ^LICENSE\.md$
 ^ingestMMD\.Rproj$
 ^\.Rproj\.user$
+^data-raw$
