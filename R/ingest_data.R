@@ -6,6 +6,10 @@
 
 ingest_data <- function(filepath){
 
+  ou <- ingest_ou(filepath)
+
+  print(paste("Ingest:", ou))
+
   df_reg <- ingest_regimens(filepath)
 
   df_plan <- ingest_plan(filepath)
@@ -13,8 +17,6 @@ ingest_data <- function(filepath){
   df_tx <- ingest_txtargets(filepath)
 
   df_combo <- dplyr::bind_rows(df_reg, df_plan, df_tx)
-
-  ou <- ingest_ou(filepath)
 
   df_combo <- df_combo %>%
     dplyr::mutate(operatingunit = ou) %>%
