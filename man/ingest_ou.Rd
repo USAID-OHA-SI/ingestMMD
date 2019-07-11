@@ -4,10 +4,10 @@
 \alias{ingest_ou}
 \title{Identify OU name}
 \usage{
-ingest_ou(path)
+ingest_ou(filepath)
 }
 \arguments{
-\item{path}{filepath to MMD Collection Tool}
+\item{filepath}{filepath to MMD Collection Tool}
 }
 \description{
 Identify OU name
@@ -15,6 +15,6 @@ Identify OU name
 \examples{
 \dontrun{
 #pull ou name from tool
-  path <- "~/MMDData/MMD National Data Collection Tool PEPFARlandia.xlsx"
-  ingest_ou(path) }
+  filepath <- "~/MMDData/MMD National Data Collection Tool PEPFARlandia.xlsx"
+  ingest_ou(filepath) }
 }

@@ -4,10 +4,10 @@
 \alias{ingest_month}
 \title{Identify Month}
 \usage{
-ingest_month(path)
+ingest_month(filepath)
 }
 \arguments{
-\item{path}{filepath to MMD Collection Tool}
+\item{filepath}{filepath to MMD Collection Tool}
 }
 \description{
 Identify Month
