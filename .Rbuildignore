@@ -3,3 +3,5 @@
 ^ingestMMD\.Rproj$
 ^\.Rproj\.user$
 ^data-raw$
+^submissions$
+^data-raw$
