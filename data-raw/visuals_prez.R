@@ -15,6 +15,7 @@ df_mer <- read_rds("~/ICPI/Data/MER_Structured_Datasets_OU_IM_FY17-19_20190621_v
  lblue50 <- "#a0c4e3"
  teal    <- "#5aa2ae"
  teal50  <- "#9bc7ce"
+ bgray   <- "#7f8fa9"
 
 #how many OUs reported on eligible
 ous <- df %>%
@@ -38,17 +39,53 @@ df_tx <- df_mer %>%
   filter(fiscal_year == 2019) %>%
   select(-fiscal_year)
 
-df %>%
+df_comp <- df %>%
   group_by(operatingunit) %>%
   summarise_at(vars(regimen_count, regimen_mmd_eligible_count, regimen_mmd_enrolled_count),
                sum, na.rm = TRUE) %>%
   ungroup() %>%
   filter(regimen_mmd_eligible_count > 0) %>%
   left_join(df_tx, ., by = "operatingunit") %>%
-  mutate(tx_curr_adj = ifelse(regimen_count > tx_curr_cum, regimen_count, tx_curr_cum)) %>%
-  summarise_at(vars(tx_curr_cum, regimen_count, regimen_mmd_eligible_count, regimen_mmd_enrolled_count),
+  #mutate(tx_curr_adj = ifelse(regimen_count > tx_curr_cum, regimen_count, tx_curr_cum)) %>%
+  summarise_at(vars(TX_CURR, regimen_count, regimen_mmd_eligible_count, regimen_mmd_enrolled_count),
                sum, na.rm = TRUE) %>%
-  gather(ind, val)
+  rename(`TX_CURR [MER]` = TX_CURR,
+         `TX_CURR [reported June]` = regimen_count,
+         `MMD Eligible` = regimen_mmd_eligible_count,
+         `MMD Enrolled` = regimen_mmd_enrolled_count) %>%
+  gather(ind, val, - operatingunit) %>%
+  mutate(ind = factor(ind, c("TX_CURR [MER]", "TX_CURR [Reported June]",
+                             "MMD Eligible", "MMD Enrolled")))
+
+ou_order <- df_comp %>%
+  spread(ind, val) %>%
+  mutate(mmd_share = `MMD Enrolled`/`TX_CURR [MER]`) %>%
+  arrange(mmd_share) %>%
+  pull(operatingunit)
+
+df_comp %>%
+  mutate(operatingunit = factor(operatingunit, ou_order)) %>%
+  ggplot(aes(ind, val, fill = ind)) +
+  geom_col(position = position_dodge()) +
+  scale_y_continuous(labels = comma) +
+  scale_fill_manual(values = c(bgray, lblue, teal, dblue)) +
+  labs(x = "", y = "") +
+  #coord_flip() +
+  facet_wrap(. ~ operatingunit, scale = "free") +
+  theme_light() +
+  theme(legend.position = "top",
+        legend.text = element_text(size = 14, color = "#7f7f7f"),
+        legend.title = element_blank(),
+        text = element_text(family  = "Gill Sans MT", size = 14),
+        #strip.text = element_text(size = 20),
+        axis.ticks = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        axis.text.x = element_blank())
+
+ggsave("C:/Users/achafetz/Downloads/MMD_cascade.png", dpi = 300,
+       units = c("in"), width = 8.6, height = 4)
 
 df_ou_breakdown <- df %>%
   group_by(operatingunit) %>%
@@ -210,6 +247,50 @@ df_vl %>%
   expand_limits(x = c(0, 1.05), y = 9) +
   scale_x_continuous(labels = percent) +
   scale_color_manual(values = c(teal, lblue, dblue)) +
+  labs(x = "", y = "") +
+  theme_light() +
+  theme(legend.position = "none",
+        text = element_text(family  = "Gill Sans MT", size = 14),
+        panel.border = element_blank(),
+        # panel.grid.major.x = element_blank(),
+        # panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_line(color = "gray", size = 1),
+        axis.text.x = element_blank(),
+        axis.ticks.y = element_blank())
+
+ggsave("C:/Users/achafetz/Downloads/MMD_vl.png", dpi = 300,
+       units = c("in"), width = 8.6, height = 4)
+
+df_vl2 <- mmd_distro %>%
+  filter(!(operatingunit == "Kenya" & is.na(mmdtarget_notes))) %>% #remove kenya peds
+  group_by(operatingunit, mmd) %>%
+  summarise_at(vars(mmdtarget_target, mmdtarget_percent), sum, na.rm = TRUE) %>%
+  ungroup() %>%
+  filter(mmd == TRUE) %>%
+  left_join(df_tx, by = "operatingunit") %>%
+  filter(!is.na(TX_CURR)) %>%
+  select(operatingunit, `MMD Share` = mmdtarget_percent, `VL Coverage`, `VL Suppression`) %>%
+  mutate(`VL Suppression` = `VL Coverage` * `VL Suppression`,
+         `MMD Share` = `VL Suppression` * `MMD Share`) %>%
+  arrange(`VL Coverage`) %>%
+  mutate(operatingunit = as_factor(operatingunit)) %>%
+  gather(ind, val, -operatingunit) %>%
+  mutate(lab_type = case_when(operatingunit == "Kenya" ~ ind))
+
+df_vl2 %>%
+  ggplot(aes(val, operatingunit, color = ind)) +
+  geom_point(size = 14,
+             #ifelse(df_vl$ind == "MMD_Share", 16, 14),
+             na.rm = TRUE) +
+  geom_text(aes(label = lab_type), vjust = -2.3,
+            hjust = ifelse(df_vl2$lab_type == "VL Coverage", .1, .5),
+            family = "Gill Sans MT", na.rm = TRUE) +
+  geom_text(aes(label = percent(val, 1)), color = ifelse(df_vl$ind == "MMD Share", "black", "white"),
+            family = "Gill Sans MT",
+            check_overlap = TRUE, na.rm = TRUE) +
+  expand_limits(x = c(0, 1), y = 9) +
+  scale_x_continuous(labels = percent) +
+  scale_color_manual(values = c(teal50, lblue, dblue)) +
   labs(x = "", y = "") +
   theme_light() +
   theme(legend.position = "none",
