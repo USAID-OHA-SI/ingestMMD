@@ -271,7 +271,8 @@ df_vl2 <- mmd_distro %>%
   filter(!is.na(TX_CURR)) %>%
   select(operatingunit, `MMD Share` = mmdtarget_percent, `VL Coverage`, `VL Suppression`) %>%
   mutate(`VL Suppression` = `VL Coverage` * `VL Suppression`,
-         `MMD Share` = `VL Suppression` * `MMD Share`) %>%
+         #`MMD Share` = `VL Suppression` * `MMD Share`
+         ) %>%
   arrange(`VL Coverage`) %>%
   mutate(operatingunit = as_factor(operatingunit)) %>%
   gather(ind, val, -operatingunit) %>%
