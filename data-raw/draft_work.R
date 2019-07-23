@@ -7,7 +7,8 @@ files <- list.files("C:/Users/achafetz/Downloads/June 2019",
 
 df <- purrr::map_dfr(files, ingest_data)
 
-readr::write_csv(df, "C:/Users/achafetz/Downloads/MMD_National_Data_June_20190711.csv", na = "")
+
+readr::write_csv(df, paste0("C:/Users/achafetz/Downloads/MMD_National_Data_June_",format(Sys.Date(),"%Y%m%d"),".csv"), na = "")
 
 
 # REVIEW ------------------------------------------------------------------
@@ -36,6 +37,11 @@ eligible <- df %>%
     dplyr::left_join(eligible, by = "operatingunit") %>%
     dplyr::left_join(plan, by  = "operatingunit") %>%
     dplyr::arrange(operatingunit)
+
+#what share of eligible patients are enrolled on MMD?
+  df %>%
+    summarize_at(vars(regimen_mmd_eligible_count, regimen_mmd_enrolled_count), sum, na.rm = TRUE) %>%
+    mutate(pct = regimen_mmd_enrolled_count/regimen_mmd_eligible_count)
 
   df %>%
     dplyr::filter(category == "Plan",
