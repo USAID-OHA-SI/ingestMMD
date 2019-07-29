@@ -56,11 +56,11 @@ df_comp <- df %>%
                sum, na.rm = TRUE) %>%
   ungroup() %>%
   rename(`TX_CURR [MER]` = TX_CURR,
-         `TX_CURR [reported June]` = regimen_count,
+         `Tx regimens reported June` = regimen_count,
          `MMD Eligible` = regimen_mmd_eligible_count,
          `MMD Enrolled` = regimen_mmd_enrolled_count) %>%
   gather(ind, val, -operatingunit) %>%
-  mutate(ind = factor(ind, c("TX_CURR [MER]", "TX_CURR [reported June]",
+  mutate(ind = factor(ind, c("TX_CURR [MER]", "Tx regimens reported June",
                              "MMD Eligible", "MMD Enrolled")))
 
 ou_order <- df_comp %>%
@@ -324,8 +324,8 @@ df_vl2 <- mmd_distro %>%
   filter(mmd == TRUE) %>%
   left_join(df_tx, by = "operatingunit") %>%
   filter(!is.na(TX_CURR)) %>%
-  select(operatingunit, `MMD Share` = mmdtarget_percent, `VL Coverage`, `VL Suppression`) %>%
-  mutate(`VL Suppression` = `VL Coverage` * `VL Suppression`) %>%
+  select(operatingunit, `MMD Share` = mmdtarget_percent, `VL Coverage`, `Documented VL Suppression` = `VL Suppression`) %>%
+  mutate(`Documented VL Suppression` = `VL Coverage` * `Documented VL Suppression`) %>%
   arrange(`VL Coverage`) %>%
   mutate(operatingunit = as_factor(operatingunit)) %>%
   gather(ind, val, -operatingunit) %>%
@@ -334,17 +334,17 @@ df_vl2 <- mmd_distro %>%
 df_vl3  <- filter(df_vl2, ind != "MMD Share")
 v1 <- df_vl3 %>%
   ggplot(aes(val, operatingunit, color = ind)) +
-  geom_point(size = 12,
+  geom_point(size = 11,
              #ifelse(df_vl$ind == "MMD_Share", 16, 14),
              na.rm = TRUE) +
   geom_text(aes(label = lab_type), vjust = -2.3,
-            hjust = ifelse(df_vl3$lab_type == "VL Coverage", .1, .9),
+            hjust = ifelse(df_vl3$lab_type == "VL Coverage", .1, 1),
             family = "Gill Sans MT", na.rm = TRUE) +
-  geom_text(aes(label = percent(val, 1)), hjust = ifelse(df_vl3$ind == "VL Suppression", 1.8, .5),
-            color = ifelse(df_vl3$ind == "VL Suppression", dblue, "white"),
+  geom_text(aes(label = percent(val, 1)), hjust = ifelse(df_vl3$ind == "Documented VL Suppression", 1.8, .5),
+            color = ifelse(df_vl3$ind == "Documented VL Suppression", dblue, "white"),
             family = "Gill Sans MT",
             check_overlap = TRUE, na.rm = TRUE) +
-  expand_limits(x = c(0, 1.05), y = 11.5) +
+  expand_limits(x = c(0, 1.05), y = 13.5) +
   scale_x_continuous(labels = percent) +
   scale_color_manual(values = c(lblue, dblue)) +
   labs(x = "", y = "") +
@@ -362,7 +362,7 @@ v1 <- df_vl3 %>%
 df_vl4  <-filter(df_vl2, ind == "MMD Share")
 v2 <- df_vl4 %>%
   ggplot(aes(val, operatingunit, color = ind)) +
-  geom_point(size = 12,
+  geom_point(size = 11,
              #ifelse(df_vl$ind == "MMD_Share", 16, 14),
              na.rm = TRUE) +
   geom_text(aes(label = lab_type), vjust = -2.3,
@@ -371,7 +371,7 @@ v2 <- df_vl4 %>%
   geom_text(aes(label = percent(val, 1)), color = "black",
             family = "Gill Sans MT",
             check_overlap = TRUE, na.rm = TRUE) +
-  expand_limits(x = c(0, 1.05), y = 11.5) +
+  expand_limits(x = c(0, 1.05), y = 13.5) +
   scale_x_continuous(labels = percent) +
   scale_color_manual(values = c(teal50)) +
   labs(x = "", y = "") +
