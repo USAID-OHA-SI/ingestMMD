@@ -1,14 +1,12 @@
 library(devtools)
 library(usethis)
 
-files <- list.files("C:/Users/achafetz/Downloads/June 2019",
-                    "MMD",
-                    full.names = TRUE)
+files <- list.files("submissions", full.names = TRUE)
 
 df <- purrr::map_dfr(files, ingest_data)
 
 
-readr::write_csv(df, paste0("C:/Users/achafetz/Downloads/MMD_National_Data_June_",format(Sys.Date(),"%Y%m%d"),".csv"), na = "")
+readr::write_csv(df, paste0("out/MMD_National_Data_June_",format(Sys.Date(),"%Y%m%d"),".csv"), na = "")
 
 
 # REVIEW ------------------------------------------------------------------
