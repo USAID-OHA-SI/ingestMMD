@@ -4,7 +4,7 @@ library(scales)
 library(extrafont)
 library(gridExtra)
 
-df  <- read_csv("out/MMD_National_Data_June_20190723.csv")
+df  <- read_csv("out/MMD_National_Data_June_20190728.csv")
 
 df_mer <- read_rds("~/ICPI/Data/MER_Structured_Datasets_OU_IM_FY17-19_20190621_v2_2.rds")
 
@@ -346,7 +346,7 @@ v1 <- df_vl3 %>%
             check_overlap = TRUE, na.rm = TRUE) +
   expand_limits(x = c(0, 1.05), y = 13.5) +
   scale_x_continuous(labels = percent) +
-  scale_color_manual(values = c(lblue, dblue)) +
+  scale_color_manual(values = c(dblue, lblue)) +
   labs(x = "", y = "") +
   theme_light() +
   theme(legend.position = "none",
@@ -385,10 +385,6 @@ v2 <- df_vl4 %>%
         axis.text.x = element_blank(),
         axis.ticks = element_blank(),
         axis.text.y = element_text(color = "white"))
-
-# ggsave("C:/Users/achafetz/Downloads/MMD_vl4.png", dpi = 300,
-#        units = c("in"), width = 4.3, height = 4)
-
 
 grid.arrange(v1, v2, ncol = 2) %>%
   ggsave("out/MMD_vl6.png", ., dpi = 300,
